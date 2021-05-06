@@ -1,50 +1,44 @@
-import React, { Component } from 'react'
 import axios from 'axios'
 import {Link, Route} from 'react-router-dom'
 import PokemonDetail from './components/PokemonDetail'
+import React, { useState, useEffect } from 'react'
 
-class PokemonApp extends Component {
+function PokemonApp() {
 
-    state = {
-        pokemons: []
-    }
+    // State to store pokemons list
+    const [pokemons, updatePokemons] = useState([])
 
-    componentDidMount(){
+    // Behaves as your componentDidMount
+    useEffect(() => {
+        // Fetch all the pokemons list
         axios.get('https://pokeapi.co/api/v2/pokemon/')
             .then((response) => {
-                this.setState({
-                    pokemons: response.data.results
-                })
+                updatePokemons(response.data.results)
             })
             .catch(() => {
                 console.log('Error')
             })
+    }, [])
+
+    if (!pokemons.length) {
+        return <h1>Loading. . . </h1>
     }
 
-    render() {
-        const { pokemons } = this.state
-        
-        if (!pokemons.length) {
-            return <h1>Loading. . . </h1>
-        }
-
-
-        return (
-            <div style={{display: 'flex'}}>
-                <div>
-                    <h1>Gotta catch 'em all</h1>
-                    {
-                        pokemons.map((pokemon, i) => {
-                            return <div key={i}>
+    return (
+        <div style={{display: 'flex'}}>
+            <div>
+                <h1>Gotta catch 'em all</h1>
+                {
+                    pokemons.map((pokemon, i) => {
+                        return <div key={i}>
                                 <Link to={`/pokemon/${i}`} >{pokemon.name}</Link>
                                 </div>
                         })
-                    }
-                </div>
-                <Route path="/pokemon/:id" component={PokemonDetail} />
+                }
             </div>
-        )
-    }
+            <Route path="/pokemon/:id" component={PokemonDetail} />
+        </div>
+    )
 }
 
 export default PokemonApp

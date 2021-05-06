@@ -17,10 +17,12 @@ class App extends Component {
     return (
       <div>
         <MyNavBar />
+        {/* Switch is used to select just the first matching route */}
         <Switch>
           {/* Automatically passes the route props to the Home component as well */}
           <Route exact path="/" component={Home} />
           {/* <Route path="/about" component={About} /> */}
+          
           {/* If you want to pass props */}
 
           <Route path="/about" render={ (routerProps) => {
